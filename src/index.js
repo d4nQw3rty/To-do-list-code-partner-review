@@ -1,6 +1,7 @@
 import './style.css';
 import Methods from './modules/storageMethods.js';
 import Status from './modules/status.js';
+import Functions from './modules/methods.js';
 
 Methods.setIndex();
 Methods.render();
@@ -21,38 +22,39 @@ form.addEventListener('submit', (e) => {
 list.addEventListener('change', (e) => {
   if (e.target.classList.contains('check')) {
     const id = e.target.parentElement.id - 1;
-    Status.Complete(id);
+    Status.complete(id);
     Methods.render();
   }
 });
 
 list.addEventListener('click', (e) => {
+  const parent = e.target.parentElement;
+  const nextSibling = e.target.nextElementSibling;
+  const previousSibling = e.target.previousElementSibling;
+  const id = parent.parentElement.id - 1;
+
   if (e.target.classList.contains('vertical-menu')) {
-    e.target.classList.remove('show');
-    e.target.classList.add('hide');
-    e.target.nextElementSibling.classList.remove('hide');
-    e.target.nextElementSibling.classList.add('show');
-    e.target.previousElementSibling.removeAttribute('disabled');
-    e.target.previousElementSibling.focus();
+    Functions.hide(e.target);
+    Functions.show(nextSibling);
+    previousSibling.removeAttribute('disabled');
+    previousSibling.focus();
   }
 
   if (e.target.textContent === 'Delete') {
-    e.target.parentElement.parentElement.remove();
-    Methods.remove(e.target.parentElement.parentElement.id - 1);
+    parent.parentElement.remove();
+    Methods.remove(id);
   }
 
   if (e.target.textContent === 'Save') {
-    e.target.parentElement.classList.add('hide');
-    e.target.parentElement.classList.remove('show');
-    e.target.parentElement.previousElementSibling.classList.add('show');
-    e.target.parentElement.previousElementSibling.classList.remove('hide');
-    e.target.parentElement.previousElementSibling.previousElementSibling.setAttribute('disabled', 'disabled');
-    Methods.edit(e.target.parentElement.previousElementSibling.previousElementSibling.value,
-      e.target.parentElement.parentElement.id - 1);
+    Functions.hide(parent);
+    parent.previousElementSibling.classList.add('show');
+    parent.previousElementSibling.classList.remove('hide');
+    parent.previousElementSibling.previousElementSibling.setAttribute('disabled', 'disabled');
+    Methods.edit(parent.previousElementSibling.previousElementSibling.value, id);
   }
 });
 
 clear.addEventListener('click', () => {
-  Status.ClearCompleted();
+  Status.clearCompleted();
   Methods.render();
 });
