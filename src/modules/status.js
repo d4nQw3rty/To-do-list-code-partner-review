@@ -1,7 +1,7 @@
 import Methods from './storageMethods.js';
 
 export default class Status {
-  static Complete(id) {
+  static complete(id) {
     const storage = localStorage.getItem('tasks');
     const tasks = storage ? JSON.parse(storage) : [];
     if (tasks === []) return -1;
@@ -11,7 +11,7 @@ export default class Status {
     return 'Completed';
   }
 
-  static ClearCompleted() {
+  static clearCompleted() {
     const storage = localStorage.getItem('tasks');
     let tasks = storage ? JSON.parse(storage) : [];
     if (tasks === []) return -1;
